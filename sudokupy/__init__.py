@@ -1,3 +1,5 @@
+import itertools
+
 import numpy as np
 
 from .blockwise_view import blockwise_view
@@ -160,10 +162,14 @@ class Board(object):
                         processed += int(c2.remove(c.answer))
         return processed
 
-    def prettyPrint(self):
+    def prettyStr(self):
         """
-        print a nice version of the board
+        Return a nice version of the board
 
         :return: :class:`str` the string that makes up the board
         """
-        raise NotImplementedError('still need to make this')
+        out = np.full((9, 9), '*')
+        for x, y in itertools.product(range(9), range(9)):
+            if self.cells[x, y].answer is not None:
+                out[x, y] = self.cells[x, y].answer
+        return str(out)
