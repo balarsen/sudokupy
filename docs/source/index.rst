@@ -11,7 +11,7 @@ Build
 
     git clone git@github.com:balarsen/sudokupy.git
     cd sudokupy
-    pip install -r requirements
+    pip install -r requirements.txt
     python setup.py install
     cd docs
     make html
