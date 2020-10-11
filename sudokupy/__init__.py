@@ -30,12 +30,16 @@ class Cell(object):
         remove a number from self.possible
 
         :param num: :class:`int`, remove a number form possible
+        :return: :class:`bool`, True if a number was removed, False otherwise
         """
+        removed = False
         if self.answer == num:
             raise ValueError('Attempting to remove the answer from this Cell: {}'.format(self))
         if num in self.possible:
             self.possible.remove(num)
+            removed = True
         self.isComplete()
+        return removed
 
     def setAnswer(self, num):
         """
@@ -98,6 +102,40 @@ class Board(object):
         for ix, iy in np.ndindex(cells.shape):
             cells[ix, iy] = Cell(ix, iy)
         return Board(cells)
+
+    def processRow(self, idx):
+        """
+        Process a row removing answers from each cell in the row
+
+        :param idx: :class:`int`, the y index [0-8] of the Row
+        :return: :class:`int`, the number of cells changed
+        """
+        processed = 0
+        for c in self.cells[idx, :]:
+            if c.answer is not None:
+                for c2 in self.cells[idx, :]:
+                    if c == c2:
+                        continue
+                    else:
+                        processed += int(c2.remove(c.answer))
+        return processed
+
+    def processColumn(self, idx):
+        """
+        Process a columns removing answers from each cell in the column
+
+        :param idx: :class:`int`, the x index [0-8] of the Column
+        :return: :class:`int`, the number of cells changed
+        """
+        processed = 0
+        for c in self.cells[:, idx]:
+            if c.answer is not None:
+                for c2 in self.cells[:, idx]:
+                    if c == c2:
+                        continue
+                    else:
+                        processed += int(c2.remove(c.answer))
+        return processed
 
     def prettyPrint(self):
         """
