@@ -1,7 +1,7 @@
 # sudokupy
 Solve sudoku puzzles for the hell of it
 
-![Sudoku puzzle](https://github.com/balarsen/sudokupy/blob/main/docs/source/_static/Sudoku_Puzzle_by_L2G-example.png | width=250)
+![Sudoku puzzle](https://github.com/balarsen/sudokupy/blob/main/docs/source/_static/Sudoku_Puzzle_by_L2G-example.png)
 
 ```
 import itertools
