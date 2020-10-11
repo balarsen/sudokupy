@@ -5,6 +5,36 @@ import numpy as np
 from .blockwise_view import blockwise_view
 
 
+def indToSquare(x, y):
+    """
+    Take a [0-8, 0-8] Cell index and make it a [0-2, 0-2] square index
+
+    :param x:  :class:`int`, the location 0-8 in X
+    :param y:  :class:`int`, the location 0-8 in Y
+    :return: :class:`numpy.ndarray`, the square indices for the square the cell is in
+    """
+    # this can probably be done smarter, but not seeing it this second
+    out = np.empty(2, dtype=int)
+    if (x >= 0) and (x < 3):
+        out[0] = 0
+    elif (x >= 3) and (x < 6):
+        out[0] = 1
+    elif (x >= 6) and (x < 9):
+        out[0] = 2
+    else:
+        raise (ValueError("invalid Cell index"))
+
+    if (y >= 0) and (y < 3):
+        out[1] = 0
+    elif (y >= 3) and (y < 6):
+        out[1] = 1
+    elif (y >= 6) and (y < 9):
+        out[1] = 2
+    else:
+        raise (ValueError("invalid Cell index"))
+    return out
+
+
 class Cell(object):
     """
     Class for each cell within the board
@@ -44,6 +74,15 @@ class Cell(object):
             removed = True
         self.isComplete()
         return removed
+
+    @property
+    def answered(self):
+        """
+        if the cell has answer set return True, False otherwise
+
+        :return: :class:`bool`,  if the cell has answer set return True, False otherwise
+        """
+        return self.answer is not None
 
     def setAnswer(self, num):
         """
@@ -95,6 +134,27 @@ class Board(object):
         assert self.cells.shape == (9, 9)
         self.blocks = blockwise_view(self.cells, (3, 3))
 
+    def processCell(self, x, y):
+        """
+        process the square, row, and columns for a particular cell
+
+        :param x:  :class:`int`, the location 0-8 in X
+        :param y:  :class:`int`, the location 0-8 in Y
+        :return: :class:`int`, the number of cells changed
+        """
+        processed = 0
+        processed += self.processRow(x)
+        processed += self.processColumn(y)
+        processed += self.processSquare()
+
+    @property
+    def unfinished(self):
+        """
+        get the number of unfinished cells in the board
+
+        :return: :class:`int`, the number of :class:`Cell` without answer
+        """
+
     @classmethod
     def emptyBoard(cls):
         """
@@ -118,7 +178,7 @@ class Board(object):
         """
         processed = 0
         for c in self.cells[idx, :]:
-            if c.answer is not None:
+            if c.answered:
                 for c2 in self.cells[idx, :]:
                     if c == c2:
                         continue
@@ -135,7 +195,7 @@ class Board(object):
         """
         processed = 0
         for c in self.cells[:, idx]:
-            if c.answer is not None:
+            if c.answered:
                 for c2 in self.cells[:, idx]:
                     if c == c2:
                         continue
@@ -154,7 +214,7 @@ class Board(object):
         processed = 0
         _blocks = self.blocks[x, y].ravel()
         for c in _blocks:
-            if c.answer is not None:
+            if c.answered:
                 for c2 in _blocks:
                     if c == c2:
                         continue
@@ -170,6 +230,6 @@ class Board(object):
         """
         out = np.full((9, 9), '*')
         for x, y in itertools.product(range(9), range(9)):
-            if self.cells[x, y].answer is not None:
+            if self.cells[x, y].answered:
                 out[x, y] = self.cells[x, y].answer
         return str(out)
