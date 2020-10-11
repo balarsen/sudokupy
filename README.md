@@ -1,6 +1,18 @@
 # sudokupy
 Solve sudoku puzzles for the hell of it
 
+## Build
+```
+git clone git@github.com:balarsen/sudokupy.git
+cd sudokupy
+pip install -r requirements
+python setup.py install
+cd docs
+make html
+```
+
+## Example
+
 ![Sudoku puzzle](https://github.com/balarsen/sudokupy/blob/main/docs/source/_static/Sudoku_Puzzle_by_L2G-example.png)
 
 ```
