@@ -5,6 +5,18 @@ sudokupy documentation
    :maxdepth: 2
    :caption: Contents:
 
+Build
+-----
+.. code-block:: bash
+
+    git clone git@github.com:balarsen/sudokupy.git
+    cd sudokupy
+    pip install -r requirements
+    python setup.py install
+    cd docs
+    make html
+
+
 Example
 -------
 .. image:: _static/Sudoku_Puzzle_by_L2G-example.png
