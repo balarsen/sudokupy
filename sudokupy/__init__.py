@@ -1,10 +1,19 @@
-
-
-
 class Cell(object):
     """
     Class for each cell within the board
+
+    A Cell can one number 1-9 in it
     """
+
+    def __init__(self):
+        self.possible = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    def remove(self, num):
+        """
+        remove a number from self.possible
+
+        :param num: :class:`int`, remove a number form possible
+        """
 
 
 class Row(object):
@@ -29,6 +38,7 @@ class Board(object):
     """
     The game board
     """
+
     @classmethod
     def emptyBoard(cls):
         """
@@ -38,4 +48,3 @@ class Board(object):
 
         :return:
         """
-
