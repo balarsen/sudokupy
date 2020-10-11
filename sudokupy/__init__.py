@@ -11,7 +11,7 @@ def cellIndToSquareInd(x, y):
 
     :param x:  :class:`int`, the location 0-8 in X
     :param y:  :class:`int`, the location 0-8 in Y
-    :return: :class:`numpy.ndarray`, the square indices for the square the cell is in
+    :return: :class:`numpy.ndarray`, the square indices for the square the cell is in [0-2, 0-2]
     """
     # this can probably be done smarter, but not seeing it this second
     out = np.empty(2, dtype=int)
@@ -145,7 +145,8 @@ class Board(object):
         processed = 0
         processed += self.processRow(x)
         processed += self.processColumn(y)
-        processed += self.processSquare()
+        processed += self.processSquare(*cellIndToSquareInd(x, y))
+        return processed
 
     @property
     def unfinished(self):
@@ -154,6 +155,7 @@ class Board(object):
 
         :return: :class:`int`, the number of :class:`Cell` without answer
         """
+        return np.product(self.cells.shape) - np.sum([v.answered for v in self.cells.ravel()])
 
     @classmethod
     def emptyBoard(cls):
