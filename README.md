@@ -2,7 +2,7 @@
 Solve sudoku puzzles for the hell of it
 
 ## Build
-```
+```bash
 git clone git@github.com:balarsen/sudokupy.git
 cd sudokupy
 pip install -r requirements.txt
