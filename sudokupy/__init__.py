@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Cell(object):
     """
     Class for each cell within the board
@@ -67,56 +70,6 @@ class Cell(object):
             return False
 
 
-class Row(object):
-    """
-    Class for a row of the game board
-
-    :ivar ind: :class:`int`, y index [0-8] of the Row
-    :ivar cells: :class:`list`, cells in the Row
-    """
-
-    def __init__(self, ind, cells):
-        """
-        Setup a Row
-
-        :param ind:  :class:`int`, the location 0-8 in Y
-        :param cells: :class:`list`, the :class:`Cell`s in the Row
-        """
-        self.ind = ind
-        self.cells = cells
-
-    def process(self):
-        """
-        Loop over the cells, removing and from the cells that have answers
-        """
-        for c1 in self.cells:
-            if c1.answer is not None:
-                for c2 in self.cells:
-                    print('c1', c1, 'c2', c2)
-                    if c2 == c1:
-                        continue
-                    else:
-                        c2.remove[c1.answer]
-
-    def __repr__(self):
-        return "<sudokupy.Row [{}]>".format(self.ind)
-
-
-class Column(Row):
-    """
-    Class for a column of the game board
-
-    :ivar ind: :class:`int`, x index [0-8] of the Column
-    :ivar cells: :class:`list`, cells in the Row
-    """
-
-    def __init__(self, ind, cells):
-        super().__init__(ind, cells)
-
-    def __repr__(self):
-        return "<sudokupy.Column [{}]>".format(self.ind)
-
-
 class Square(object):
     """
     Class for a 3x3 square of the board
@@ -126,7 +79,17 @@ class Square(object):
 class Board(object):
     """
     The game board
+
+    :ivar cells: :class:`numpy.ndarray`, the :class:`Cell` of the board (9*9=27)
     """
+
+    def __init__(self, cells):
+        """
+        The game board made up of cells
+
+        :param cells: :class:`numpy.ndarray`, the :class:`Cell` of the board (9*9=27)
+        """
+        self.cells = cells
 
     @classmethod
     def emptyBoard(cls):
@@ -135,5 +98,17 @@ class Board(object):
 
         A board has 9 :class:`Row` and 9 :class:`Column` and 9 :class:`Square`, create them all
 
-        :return:
         """
+        cells = np.empty((9, 9), dtype=object)
+        # This might be faster with list comp or something, but there are just 27
+        for ix, iy in np.ndindex(cells.shape):
+            cells[ix, iy] = Cell(ix, iy)
+        return Board(cells)
+
+    def prettyPrint(self):
+        """
+        print a nice version of the board
+
+        :return: :class:`str` the string that makes up the board
+        """
+        raise NotImplementedError('still need to make this')
