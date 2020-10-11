@@ -13,6 +13,7 @@ Welcome to sudokupy's documentation!
 
 .. automodule:: sudokupy
    :members:
+   :undoc-members:
 
 
 Indices and tables

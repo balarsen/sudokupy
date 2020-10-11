@@ -3,11 +3,25 @@ class Cell(object):
     Class for each cell within the board
 
     A Cell can one number 1-9 in it
+
+    :ivar x: :class:`int`, x index [0-8] of the cell
+    :ivar y: :class:`int`, y index [0-8] of the cell
+    :ivar answer: :class:`int`, the value of the cell, None if not known
+    :ivar possible: :class:`list`, possible values of the cell
+
     """
 
-    def __init__(self):
+    def __init__(self, x, y):
+        """
+        Setup a Cell
+
+        :param x:  :class:`int`, the location 0-8 in X
+        :param y:  :class:`int`, the location 0-8 in Y
+        """
         self.possible = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         self.answer = None
+        self.x = x
+        self.y = y
 
     def remove(self, num):
         """
@@ -30,6 +44,11 @@ class Cell(object):
             return True
         else:
             return False
+
+    def __repr__(self):
+        return "<sudokupy.Cell ({},{}) {}>".format(self.x, self.y, self.possible)
+
+    __str__ = __repr__
 
 
 class Row(object):
