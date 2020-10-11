@@ -70,12 +70,6 @@ class Cell(object):
             return False
 
 
-class Square(object):
-    """
-    Class for a 3x3 square of the board
-    """
-
-
 class Board(object):
     """
     The game board
