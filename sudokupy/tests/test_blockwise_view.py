@@ -52,8 +52,9 @@ def test_3d():
                 block_start = numpy.array((x, y, z)) * blockshape
                 block_stop = block_start + blockshape
                 blockwise_copy[x, y, z] = orig_data[
-                    block_start[0] : block_stop[0], block_start[1] : block_stop[1], block_start[2] : block_stop[2]
-                ]
+                                          block_start[0]: block_stop[0], block_start[1]: block_stop[1],
+                                          block_start[2]: block_stop[2]
+                                          ]
 
     view = blockwise_view(orig_data, blockshape)
 
@@ -79,4 +80,3 @@ def test_3d_aslist():
     block_list = blockwise_view(orig_data, blockshape, aslist=True)
 
     assert (numpy.array(block_list) == array_view.reshape((-1,) + blockshape)).all()
-

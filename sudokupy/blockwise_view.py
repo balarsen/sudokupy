@@ -1,17 +1,7 @@
 # from https://github.com/ilastik/lazyflow/blob/master/lazyflow/utility/blockwise_view.py
 # With huge thanks!
 
-from __future__ import division
-from builtins import map
 import numpy
-
-try:
-    # If you use vigra, we do special handling to preserve axistags
-    import vigra
-
-    _vigra_available = True
-except ImportError:
-    _vigra_available = False
 
 
 def blockwise_view(a, blockshape, aslist=False, require_aligned_blocks=True):
@@ -63,7 +53,7 @@ def blockwise_view(a, blockshape, aslist=False, require_aligned_blocks=True):
 
     if require_aligned_blocks:
         assert (
-            numpy.mod(a.shape, blockshape) == 0
+                numpy.mod(a.shape, blockshape) == 0
         ).all(), "blockshape {} must divide evenly into array shape {}".format(blockshape, a.shape)
 
     # inner strides: strides within each block (same as original array)
@@ -76,17 +66,6 @@ def blockwise_view(a, blockshape, aslist=False, require_aligned_blocks=True):
     # Generate a view with our new strides (outer+inner).
     view = numpy.lib.stride_tricks.as_strided(a, shape=view_shape, strides=(inter_block_strides + intra_block_strides))
 
-    # Special handling for VigraArrays
-    if _vigra_available and isinstance(a, vigra.VigraArray) and hasattr(a, "axistags"):
-        view_axistags = vigra.AxisTags([vigra.AxisInfo() for _ in blockshape] + list(a.axistags))
-        view = vigra.taggedView(view, view_axistags)
-
     if aslist:
         return list(map(view.__getitem__, numpy.ndindex(outershape)))
     return view
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod()

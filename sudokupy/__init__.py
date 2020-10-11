@@ -1,5 +1,7 @@
 import numpy as np
 
+from .blockwise_view import blockwise_view
+
 
 class Cell(object):
     """
@@ -85,9 +87,11 @@ class Board(object):
         """
         The game board made up of cells
 
-        :param cells: :class:`numpy.ndarray`, the :class:`Cell` of the board (9*9=27)
+        :param cells: :class:`numpy.ndarray`, the :class:`Cell` of the board (9*9=81)
         """
-        self.cells = cells
+        self.cells = np.require(cells, requirements=["C_CONTIGUOUS"])
+        assert self.cells.shape == (9, 9)
+        self.blocks = blockwise_view(self.cells, (3, 3))
 
     @classmethod
     def emptyBoard(cls):
@@ -98,7 +102,7 @@ class Board(object):
 
         """
         cells = np.empty((9, 9), dtype=object)
-        # This might be faster with list comp or something, but there are just 27
+        # This might be faster with list comp or something, but there are just 81
         for ix, iy in np.ndindex(cells.shape):
             cells[ix, iy] = Cell(ix, iy)
         return Board(cells)
@@ -131,6 +135,25 @@ class Board(object):
         for c in self.cells[:, idx]:
             if c.answer is not None:
                 for c2 in self.cells[:, idx]:
+                    if c == c2:
+                        continue
+                    else:
+                        processed += int(c2.remove(c.answer))
+        return processed
+
+    def processSquare(self, x, y):
+        """
+        Process a square in a board given by x [0-2] and y [0-2]
+
+        :param x: :class:`int`, the x index [0-2] of the Square
+        :param y: :class:`int`, the y index [0-2] of the Square
+        :return: :class:`int`, the number of cells changed
+        """
+        processed = 0
+        _blocks = self.blocks[x, y].ravel()
+        for c in _blocks:
+            if c.answer is not None:
+                for c2 in _blocks:
                     if c == c2:
                         continue
                     else:
