@@ -5,7 +5,7 @@ import numpy as np
 from .blockwise_view import blockwise_view
 
 
-def indToSquare(x, y):
+def cellIndToSquareInd(x, y):
     """
     Take a [0-8, 0-8] Cell index and make it a [0-2, 0-2] square index
 
