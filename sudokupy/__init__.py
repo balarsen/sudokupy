@@ -7,6 +7,7 @@ class Cell(object):
 
     def __init__(self):
         self.possible = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        self.answer = None
 
     def remove(self, num):
         """
@@ -14,6 +15,21 @@ class Cell(object):
 
         :param num: :class:`int`, remove a number form possible
         """
+        if num in self.possible:
+            self.possible.remove(num)
+        self.isComplete()
+
+    def isComplete(self):
+        """
+        If there is only one possible left set it
+
+        :return: :class:`bool`, True if complete, False if not
+        """
+        if len(self.possible) == 1:
+            self.answer = self.possible[0]
+            return True
+        else:
+            return False
 
 
 class Row(object):
